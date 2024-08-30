@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPhone Calculator</title>
+    <style>
+        body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f1f1f1;
+}
+
+.calculator {
+    width: 400px;
+    background-color: #333;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.display {
+    height: 130px;
+    background-color: #1c1c1c;
+    color: #fff;
+    font-size: 60px;
+    text-align: right;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.btn {
+    width: 100px;
+    height: 100px;
+    border-radius: 60%;
+    padding: 20px;
+    font-size: 24px;
+    border: 1px solid #555;
+    background-color: #e0e0e0;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn.operator {
+    background-color: #ff9500;
+    color: #fff;
+}
+
+.btn.zero {
+    grid-column: span 2;
+    width: 200px;
+}
+
+.btn:hover {
+    background-color: #686060;
+}
+
+.btn.operator:hover {
+    background-color: #d4ff00;
+}
+
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="btn" onclick="clearDisplay()">AC</button>
+            <button class="btn" onclick="toggleSign()">+/-</button>
+            <button class="btn" onclick="percent()">%</button>
+            <button class="btn operator" onclick="inputOperator('/')">÷</button>
+
+            <button class="btn" onclick="inputDigit(7)">7</button>
+            <button class="btn" onclick="inputDigit(8)">8</button>
+            <button class="btn" onclick="inputDigit(9)">9</button>
+            <button class="btn operator" onclick="inputOperator('*')">×</button>
+
+            <button class="btn" onclick="inputDigit(4)">4</button>
+            <button class="btn" onclick="inputDigit(5)">5</button>
+            <button class="btn" onclick="inputDigit(6)">6</button>
+            <button class="btn operator" onclick="inputOperator('-')">-</button>
+
+            <button class="btn" onclick="inputDigit(1)">1</button>
+            <button class="btn" onclick="inputDigit(2)">2</button>
+            <button class="btn" onclick="inputDigit(3)">3</button>
+            <button class="btn operator" onclick="inputOperator('+')">+</button>
+
+            <button class="btn zero" onclick="inputDigit(0)">0</button>
+            <button class="btn" onclick="inputDecimal()">.</button>
+            <button class="btn operator" onclick="calculate()">=</button>
+        </div>
+    </div>
+    <script>
+        let currentInput = '0';
+let operator = null;
+let previousInput = null;
+
+function updateDisplay() {
+    const display = document.getElementById('display');
+    display.innerText = currentInput;
+}
+
+function clearDisplay() {
+    currentInput = '0';
+    operator = null;
+    previousInput = null;
+    updateDisplay();
+}
+
+function inputDigit(digit) {
+    if (currentInput === '0') {
+        currentInput = digit.toString();
+    } else {
+        currentInput += digit.toString();
+    }
+    updateDisplay();
+}
+
+function inputDecimal() {
+    if (!currentInput.includes('.')) {
+        currentInput += '.';
+    }
+    updateDisplay();
+}
+
+function inputOperator(op) {
+    if (operator === null) {
+        operator = op;
+        previousInput = currentInput;
+        currentInput = '0';
+    } else {
+        calculate();
+        operator = op;
+        previousInput = currentInput;
+        currentInput = '0';
+    }
+}
+
+function toggleSign() {
+    currentInput = (parseFloat(currentInput) * -1).toString();
+    updateDisplay();
+}
+
+function percent() {
+    currentInput = (parseFloat(currentInput) / 100).toString();
+    updateDisplay();
+}
+
+function calculate() {
+    let result;
+    const prev = parseFloat(previousInput);
+    const current = parseFloat(currentInput);
+
+    if (operator === '+') {
+        result = prev + current;
+    } else if (operator === '-') {
+        result = prev - current;
+    } else if (operator === '*') {
+        result = prev * current;
+    } else if (operator === '/') {
+        result = prev / current;
+    }
+
+    currentInput = result.toString();
+    operator = null;
+    previousInput = null;
+    updateDisplay();
+}
+
+    </script>
+</body>
+</html>
